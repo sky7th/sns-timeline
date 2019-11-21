@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sky7th.followcomponent.core.domain.base.BaseController;
 import com.sky7th.followcomponent.core.domain.follow.FollowService;
 
 @Controller
 @RequestMapping("/follow")
-public class FollowController {
+public class FollowController extends BaseController {
 
 	@Autowired
 	private FollowService followService;
@@ -28,7 +29,7 @@ public class FollowController {
 	 */
 	@GetMapping("/followingList/{userId}")
 	@ResponseBody
-	public Map<String, Object> sendFollowingList(@PathVariable(name = "userId") int userId) {
+	public Map<String, Object> sendFollowingList(@PathVariable(name = "userId") String userId) {
 		Map<String, Object> result = new HashMap<>();
 
 		return result;
@@ -41,7 +42,7 @@ public class FollowController {
 	 */
 	@GetMapping("/followerList/{userId}")
 	@ResponseBody
-	public Map<String, Object> sendFollowerList(@PathVariable(name = "userId") int userId) {
+	public Map<String, Object> sendFollowerList(@PathVariable(name = "userId") String userId) {
 		Map<String, Object> result = new HashMap<>();
 
 		return result;
@@ -56,8 +57,8 @@ public class FollowController {
 	@PostMapping("/{fromUserId}/{toUserId}")
 	@ResponseBody
 	public Map<String, Object> saveFollow(
-		@PathVariable(name = "fromUserId") int fromUserId,
-		@PathVariable(name = "toUserId") int toUserId) {
+		@PathVariable(name = "fromUserId") String fromUserId,
+		@PathVariable(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
 
 		return result;
@@ -72,8 +73,8 @@ public class FollowController {
 	@DeleteMapping("/{fromUserId}/{toUserId}")
 	@ResponseBody
 	public Map<String, Object> deleteFollow(
-		@PathVariable(name = "fromUserId") int fromUserId,
-		@PathVariable(name = "toUserId") int toUserId) {
+		@PathVariable(name = "fromUserId") String fromUserId,
+		@PathVariable(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
 
 		return result;
