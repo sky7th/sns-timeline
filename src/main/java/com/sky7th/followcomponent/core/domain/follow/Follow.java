@@ -7,8 +7,8 @@ public class Follow {
 
 	private Integer id;
 
-	private String followerId;
+	private String followerUserId;
 
-	private String followedId;
+	private String followedUserId;
 
 }

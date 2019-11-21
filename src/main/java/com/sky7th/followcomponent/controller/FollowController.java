@@ -99,6 +99,9 @@ public class FollowController extends BaseController {
 		@RequestParam(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
 		try {
+			if (followService.getFollowing(fromUserId, toUserId) != null) {
+				throw new Exception("This follow info is already exist.");
+			}
 			followService.saveFollow(fromUserId, toUserId);
 			result = this.getSuccessResult();
 		} catch (Exception e) {

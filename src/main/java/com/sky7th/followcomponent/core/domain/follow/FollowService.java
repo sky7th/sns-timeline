@@ -39,6 +39,14 @@ public class FollowService extends BaseService {
 			.fetchInto(FollowingResponse.class);
 	}
 
+	public Follow getFollowing(String fromUserId, String toUserId) {
+		return jooq.select()
+			.from(following)
+			.where(following.FOLLOWER_USER_ID.eq(fromUserId)
+				.and(following.FOLLOWED_USER_ID.eq(toUserId)))
+			.fetchOneInto(Follow.class);
+	}
+
 	@Transactional
 	public void saveFollow(String fromUserId, String toUserId) {
 		jooq.insertInto(following, following.FOLLOWER_USER_ID, following.FOLLOWED_USER_ID)
