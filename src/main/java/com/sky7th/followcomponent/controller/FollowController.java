@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sky7th.followcomponent.core.domain.base.BaseController;
 import com.sky7th.followcomponent.core.domain.follow.FollowService;
 import com.sky7th.followcomponent.core.domain.follow.FollowerResponse;
+import com.sky7th.followcomponent.core.domain.follow.FollowingResponse;
 
 @Controller
 public class FollowController extends BaseController {
 
-	private static final int FOLLOWER_LIMIT = 2;
+	private static final int REQUEST_LIMIT = 2;
 
 	@Autowired
 	private FollowService followService;
@@ -34,11 +35,20 @@ public class FollowController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> sendFollowingList(
 		@PathVariable(name = "userId") String userId,
-		@RequestParam(name = "start") int start,
-		@RequestParam(name = "end") int end) {
+		@RequestParam(name = "start") int start) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			result = getSuccessResult(followService.getFollowingList(userId, start, end));
+			List<FollowingResponse> followingList = followService.getFollowingList(userId, start, REQUEST_LIMIT);
+			if (followingList.size() == 0) {
+				return getSuccessResult(followingList);
+			}
+			Integer lastFollowingId = followingList.get(followingList.size() - 1).getId();
+			result = getSuccessResult(lastFollowingId);
+			if (followingList.size() != REQUEST_LIMIT) {
+				result.put("isLast", true);
+			} else {
+				result.put("isLast", false);
+			}
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
@@ -57,13 +67,13 @@ public class FollowController extends BaseController {
 		@RequestParam(name = "start") int start) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			List<FollowerResponse> followerList = followService.getFollowerList(userId, start, FOLLOWER_LIMIT);
+			List<FollowerResponse> followerList = followService.getFollowerList(userId, start, REQUEST_LIMIT);
 			if (followerList.size() == 0) {
 				return getSuccessResult(followerList);
 			}
 			Integer lastFollowingId = followerList.get(followerList.size() - 1).getId();
 			result = getSuccessResult(lastFollowingId);
-			if (followerList.size() != FOLLOWER_LIMIT) {
+			if (followerList.size() != REQUEST_LIMIT) {
 				result.put("isLast", true);
 			} else {
 				result.put("isLast", false);
