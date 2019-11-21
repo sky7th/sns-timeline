@@ -36,19 +36,20 @@ public class FollowController extends BaseController {
 	public Map<String, Object> sendFollowingList(
 		@PathVariable(name = "userId") String userId,
 		@RequestParam(name = "start") int start) {
-		Map<String, Object> result = new HashMap<>();
+		HashMap<String, Object> result = new HashMap<>();
 		try {
 			List<FollowingResponse> followingList = followService.getFollowingList(userId, start, REQUEST_LIMIT);
-			if (followingList.size() == 0) {
-				return getSuccessResult(followingList);
-			}
-			Integer lastFollowingId = followingList.get(followingList.size() - 1).getId();
-			result = getSuccessResult(lastFollowingId);
 			if (followingList.size() != REQUEST_LIMIT) {
 				result.put("isLast", true);
 			} else {
 				result.put("isLast", false);
 			}
+			if (followingList.size() == 0) {
+				return getSuccessResult(result, followingList);
+			}
+			Integer lastFollowingId = followingList.get(followingList.size() - 1).getId();
+			result = getSuccessResult(result, lastFollowingId);
+
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
@@ -65,19 +66,20 @@ public class FollowController extends BaseController {
 	public Map<String, Object> sendFollowerList(
 		@PathVariable(name = "userId") String userId,
 		@RequestParam(name = "start") int start) {
-		Map<String, Object> result = new HashMap<>();
+		HashMap<String, Object> result = new HashMap<>();
 		try {
 			List<FollowerResponse> followerList = followService.getFollowerList(userId, start, REQUEST_LIMIT);
-			if (followerList.size() == 0) {
-				return getSuccessResult(followerList);
-			}
-			Integer lastFollowingId = followerList.get(followerList.size() - 1).getId();
-			result = getSuccessResult(lastFollowingId);
 			if (followerList.size() != REQUEST_LIMIT) {
 				result.put("isLast", true);
 			} else {
 				result.put("isLast", false);
 			}
+			if (followerList.size() == 0) {
+				return getSuccessResult(result, followerList);
+			}
+			Integer lastFollowingId = followerList.get(followerList.size() - 1).getId();
+			result = getSuccessResult(result, lastFollowingId);
+
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}

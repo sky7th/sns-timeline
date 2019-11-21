@@ -21,6 +21,12 @@ public class BaseController {
 		return retMap;
 	}
 
+	protected HashMap<String, Object> getSuccessResult(HashMap<String, Object> retMap, Object data) {
+		retMap.put("result", "success");
+		retMap.put("data", data);
+		return retMap;
+	}
+
 	protected HashMap<String, Object> getSuccessResult(Object data) {
 		HashMap<String, Object> retMap = getSuccessResult();
 		retMap.put("data", data);
