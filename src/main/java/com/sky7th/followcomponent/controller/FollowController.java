@@ -30,9 +30,16 @@ public class FollowController extends BaseController {
 	 */
 	@GetMapping("/following/list/{userId}")
 	@ResponseBody
-	public Map<String, Object> sendFollowingList(@PathVariable(name = "userId") String userId) {
+	public Map<String, Object> sendFollowingList(
+		@PathVariable(name = "userId") String userId,
+		@RequestParam(name = "start") int start,
+		@RequestParam(name = "end") int end) {
 		Map<String, Object> result = new HashMap<>();
-
+		try {
+			result = getSuccessResult(followService.getFollowingList(userId, start, end));
+		} catch (Exception e) {
+			result = this.getFailResult(e.getMessage());
+		}
 		return result;
 	}
 
