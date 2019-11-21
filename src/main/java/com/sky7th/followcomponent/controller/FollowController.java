@@ -1,6 +1,7 @@
 package com.sky7th.followcomponent.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sky7th.followcomponent.core.domain.base.BaseController;
 import com.sky7th.followcomponent.core.domain.follow.FollowService;
+import com.sky7th.followcomponent.core.domain.follow.FollowerResponse;
 
 @Controller
 public class FollowController extends BaseController {
 
-	private static final int FOLLOWER_LIMIT = 1000;
+	private static final int FOLLOWER_LIMIT = 2;
 
 	@Autowired
 	private FollowService followService;
@@ -55,7 +57,17 @@ public class FollowController extends BaseController {
 		@RequestParam(name = "start") int start) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			result = getSuccessResult(followService.getFollowerList(userId, start));
+			List<FollowerResponse> followerList = followService.getFollowerList(userId, start, FOLLOWER_LIMIT);
+			if (followerList.size() == 0) {
+				return getSuccessResult(followerList);
+			}
+			Integer lastFollowingId = followerList.get(followerList.size() - 1).getId();
+			result = getSuccessResult(lastFollowingId);
+			if (followerList.size() != FOLLOWER_LIMIT) {
+				result.put("isLast", true);
+			} else {
+				result.put("isLast", false);
+			}
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}

@@ -14,13 +14,14 @@ public class FollowService extends BaseService {
 
 	private Following following = Tables.FOLLOWING;
 
-	public List<FollowerResponse> getFollowerList(String userId, Integer start, Integer end) {
+	public List<FollowerResponse> getFollowerList(String userId, Integer start, int followerLimit) {
 		return jooq.select(
 			following.ID,
 			following.FOLLOWER_USER_ID)
 			.from(following)
 			.where(following.FOLLOWED_USER_ID.eq(userId)
-				.and(following.ID.between(UInteger.valueOf(start), UInteger.valueOf(end))))
+				.and(following.ID.gt(UInteger.valueOf(start))))
+			.limit(followerLimit)
 			.fetchInto(FollowerResponse.class);
 	}
 
