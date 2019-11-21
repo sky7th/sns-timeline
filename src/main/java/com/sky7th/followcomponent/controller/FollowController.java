@@ -96,7 +96,12 @@ public class FollowController extends BaseController {
 		@PathVariable(name = "fromUserId") String fromUserId,
 		@PathVariable(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
-
+		try {
+			followService.deleteFollow(fromUserId, toUserId);
+			result = this.getSuccessResult();
+		} catch (Exception e) {
+			result = this.getFailResult(e.getMessage());
+		}
 		return result;
 	}
 

@@ -40,4 +40,11 @@ public class FollowService extends BaseService {
 			.execute();
 	}
 
+	public void deleteFollow(String fromUserId, String toUserId) {
+		jooq.delete(follows)
+			.where(follows.FOLLOWER_ID.eq(fromUserId)
+				.and(follows.FOLLOWED_ID.eq(toUserId)))
+			.execute();
+	}
+
 }
