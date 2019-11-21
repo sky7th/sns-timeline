@@ -7,6 +7,6 @@ public class FollowerResponse {
 
 	private Integer id;
 
-	private Integer followerId;
+	private String followerUserId;
 
 }
