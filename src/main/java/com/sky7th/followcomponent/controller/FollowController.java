@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sky7th.followcomponent.core.follow.FollowService;
+import com.sky7th.followcomponent.core.domain.follow.FollowService;
 
 @Controller
 @RequestMapping("/follow")
