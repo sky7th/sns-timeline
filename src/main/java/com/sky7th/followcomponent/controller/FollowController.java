@@ -21,7 +21,7 @@ import com.sky7th.followcomponent.core.domain.follow.FollowingResponse;
 @Controller
 public class FollowController extends BaseController {
 
-	private static final int REQUEST_LIMIT = 2;
+	private static final int REQUEST_LIMIT = 100;
 
 	@Autowired
 	private FollowService followService;
