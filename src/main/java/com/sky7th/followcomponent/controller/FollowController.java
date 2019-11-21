@@ -27,7 +27,7 @@ public class FollowController extends BaseController {
 	 * @param userId
 	 * @return
 	 */
-	@GetMapping("/followingList/{userId}")
+	@GetMapping("/following/list/{userId}")
 	@ResponseBody
 	public Map<String, Object> sendFollowingList(@PathVariable(name = "userId") String userId) {
 		Map<String, Object> result = new HashMap<>();
@@ -40,7 +40,7 @@ public class FollowController extends BaseController {
 	 * @param userId
 	 * @return
 	 */
-	@GetMapping("/followerList/{userId}")
+	@GetMapping("/follower/list/{userId}")
 	@ResponseBody
 	public Map<String, Object> sendFollowerList(@PathVariable(name = "userId") String userId) {
 		Map<String, Object> result = new HashMap<>();
