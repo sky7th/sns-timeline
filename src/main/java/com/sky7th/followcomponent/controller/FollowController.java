@@ -44,7 +44,11 @@ public class FollowController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> sendFollowerList(@PathVariable(name = "userId") String userId) {
 		Map<String, Object> result = new HashMap<>();
-
+		try {
+			result = getSuccessResult(followService.getFollowerList(userId));
+		} catch (Exception e) {
+			result = this.getFailResult(e.getMessage());
+		}
 		return result;
 	}
 
@@ -60,7 +64,12 @@ public class FollowController extends BaseController {
 		@PathVariable(name = "fromUserId") String fromUserId,
 		@PathVariable(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
-
+		try {
+			followService.saveFollow(fromUserId, toUserId);
+			result = this.getSuccessResult();
+		} catch (Exception e) {
+			result = this.getFailResult(e.getMessage());
+		}
 		return result;
 	}
 
