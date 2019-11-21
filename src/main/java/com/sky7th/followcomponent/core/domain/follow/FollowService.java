@@ -2,6 +2,7 @@ package com.sky7th.followcomponent.core.domain.follow;
 
 import java.util.List;
 
+import org.jooq.types.UInteger;
 import org.springframework.stereotype.Service;
 
 import com.sky7th.followcomponent.core.domain.base.BaseService;
@@ -13,12 +14,13 @@ public class FollowService extends BaseService {
 
 	private Follows follows = Tables.FOLLOWS;
 
-	public List<FollowerResponse> getFollowerList(String userId) {
+	public List<FollowerResponse> getFollowerList(String userId, Integer start, Integer end) {
 		return jooq.select(
 			follows.ID,
 			follows.FOLLOWER_ID)
 			.from(follows)
-			.where(follows.FOLLOWED_ID.eq(userId))
+			.where(follows.FOLLOWED_ID.eq(userId)
+				.and(follows.ID.between(UInteger.valueOf(start), UInteger.valueOf(end))))
 			.fetchInto(FollowerResponse.class);
 	}
 

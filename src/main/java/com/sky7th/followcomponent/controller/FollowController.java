@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sky7th.followcomponent.core.domain.base.BaseController;
@@ -42,10 +43,13 @@ public class FollowController extends BaseController {
 	 */
 	@GetMapping("/follower/list/{userId}")
 	@ResponseBody
-	public Map<String, Object> sendFollowerList(@PathVariable(name = "userId") String userId) {
+	public Map<String, Object> sendFollowerList(
+		@PathVariable(name = "userId") String userId,
+		@RequestParam(name = "start") int start,
+		@RequestParam(name = "end") int end) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			result = getSuccessResult(followService.getFollowerList(userId));
+			result = getSuccessResult(followService.getFollowerList(userId, start, end));
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
