@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -17,8 +16,9 @@ import com.sky7th.followcomponent.core.domain.base.BaseController;
 import com.sky7th.followcomponent.core.domain.follow.FollowService;
 
 @Controller
-@RequestMapping("/follow")
 public class FollowController extends BaseController {
+
+	private static final int FOLLOWER_LIMIT = 1000;
 
 	@Autowired
 	private FollowService followService;
@@ -28,7 +28,7 @@ public class FollowController extends BaseController {
 	 * @param userId
 	 * @return
 	 */
-	@GetMapping("/following/list/{userId}")
+	@GetMapping("/users/{userId}/following")
 	@ResponseBody
 	public Map<String, Object> sendFollowingList(
 		@PathVariable(name = "userId") String userId,
@@ -48,15 +48,14 @@ public class FollowController extends BaseController {
 	 * @param userId
 	 * @return
 	 */
-	@GetMapping("/follower/list/{userId}")
+	@GetMapping("/users/{userId}/follower")
 	@ResponseBody
 	public Map<String, Object> sendFollowerList(
 		@PathVariable(name = "userId") String userId,
-		@RequestParam(name = "start") int start,
-		@RequestParam(name = "end") int end) {
+		@RequestParam(name = "start") int start) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			result = getSuccessResult(followService.getFollowerList(userId, start, end));
+			result = getSuccessResult(followService.getFollowerList(userId, start));
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
@@ -69,11 +68,11 @@ public class FollowController extends BaseController {
 	 * @param toUserId
 	 * @return
 	 */
-	@PostMapping("/{fromUserId}/{toUserId}")
+	@PostMapping("/follow")
 	@ResponseBody
 	public Map<String, Object> saveFollow(
-		@PathVariable(name = "fromUserId") String fromUserId,
-		@PathVariable(name = "toUserId") String toUserId) {
+		@RequestParam(name = "fromUserId") String fromUserId,
+		@RequestParam(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			followService.saveFollow(fromUserId, toUserId);
@@ -90,11 +89,11 @@ public class FollowController extends BaseController {
 	 * @param toUserId
 	 * @return
 	 */
-	@DeleteMapping("/{fromUserId}/{toUserId}")
+	@DeleteMapping("/follow")
 	@ResponseBody
 	public Map<String, Object> deleteFollow(
-		@PathVariable(name = "fromUserId") String fromUserId,
-		@PathVariable(name = "toUserId") String toUserId) {
+		@RequestParam(name = "fromUserId") String fromUserId,
+		@RequestParam(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			followService.deleteFollow(fromUserId, toUserId);
