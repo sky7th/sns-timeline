@@ -39,19 +39,13 @@ public class FollowController extends BaseController {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			List<FollowingResponse> followingList = followService.getFollowingList(userId, start, REQUEST_LIMIT);
+			Integer lastFollowingId =
+				followingList.size() == 0
+					? null
+					: followingList.get(followingList.size() - 1).getId();
 			result = getSuccessResult(result, followingList);
-			result.put("nextStartId", null);
-
-			if (followingList.size() != 0) {
-				Integer lastFollowingId = followingList.get(followingList.size() - 1).getId();
-				result.put("nextStartId", lastFollowingId + 1);
-			}
-			if (followingList.size() != REQUEST_LIMIT) {
-				result.put("isLast", true);
-			} else {
-				result.put("isLast", false);
-			}
-
+			result = addMapNextStartId(result, lastFollowingId, followingList.size());
+			result = addMapIsLast(result, followingList.size());
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
@@ -71,18 +65,13 @@ public class FollowController extends BaseController {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			List<FollowerResponse> followerList = followService.getFollowerList(userId, start, REQUEST_LIMIT);
+			Integer lastFollowedId =
+				followerList.size() == 0
+					? null
+					: followerList.get(followerList.size() - 1).getId();
 			result = getSuccessResult(result, followerList);
-			result.put("nextStartId", null);
-
-			if (followerList.size() != 0) {
-				Integer lastFollowedId = followerList.get(followerList.size() - 1).getId();
-				result.put("nextStartId", lastFollowedId + 1);
-			}
-			if (followerList.size() != REQUEST_LIMIT) {
-				result.put("isLast", true);
-			} else {
-				result.put("isLast", false);
-			}
+			result = addMapNextStartId(result, lastFollowedId, followerList.size());
+			result = addMapIsLast(result, followerList.size());
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
@@ -130,6 +119,25 @@ public class FollowController extends BaseController {
 			result = this.getSuccessResult();
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
+		}
+		return result;
+	}
+
+	private Map<String, Object> addMapNextStartId(Map<String, Object> result, Integer lastFollowingId,
+		int listSize) {
+		if (listSize == 0) {
+			result.put("nextStartId", null);
+		} else {
+			result.put("nextStartId", lastFollowingId + 1);
+		}
+		return result;
+	}
+
+	private Map<String, Object> addMapIsLast(Map<String, Object> result, int listSize) {
+		if (listSize == REQUEST_LIMIT) {
+			result.put("isLast", false);
+		} else {
+			result.put("isLast", true);
 		}
 		return result;
 	}
