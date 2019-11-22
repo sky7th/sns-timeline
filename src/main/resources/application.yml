@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://101.101.166.52:3306/relation?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    username: hackday
+    password: hackday19H!@
+  jooq:
+    sql-dialect: mysql
+
+server:
+  port: 8080
