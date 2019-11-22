@@ -21,8 +21,6 @@ import com.sky7th.followcomponent.core.domain.follow.FollowingResponse;
 @Controller
 public class FollowController extends BaseController {
 
-	private static final int REQUEST_LIMIT = 100;
-
 	@Autowired
 	private FollowService followService;
 
@@ -35,17 +33,21 @@ public class FollowController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> getFollowingMap(
 		@PathVariable(name = "userId") String userId,
-		@RequestParam(name = "start") int start) {
+		@RequestParam(name = "start") int start,
+		@RequestParam(name = "requestLimit") int requestLimit) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			List<FollowingResponse> followingList = followService.getFollowingList(userId, start, REQUEST_LIMIT);
+			if (requestLimit > 1000) {
+				throw new Exception("The limit you are requesting is too large");
+			}
+			List<FollowingResponse> followingList = followService.getFollowingList(userId, start, requestLimit);
 			Integer lastFollowingId =
 				followingList.size() == 0
 					? null
 					: followingList.get(followingList.size() - 1).getId();
 			result = getSuccessResult(result, followingList);
 			result = addMapNextStartId(result, lastFollowingId, followingList.size());
-			result = addMapIsLast(result, followingList.size());
+			result = addMapIsLast(result, followingList.size(), requestLimit);
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
@@ -61,17 +63,21 @@ public class FollowController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> getFollowerMap(
 		@PathVariable(name = "userId") String userId,
-		@RequestParam(name = "start") int start) {
+		@RequestParam(name = "start") int start,
+		@RequestParam(name = "requestLimit") int requestLimit) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			List<FollowerResponse> followerList = followService.getFollowerList(userId, start, REQUEST_LIMIT);
+			if (requestLimit > 1000) {
+				throw new Exception("The limit you are requesting is too large");
+			}
+			List<FollowerResponse> followerList = followService.getFollowerList(userId, start, requestLimit);
 			Integer lastFollowedId =
 				followerList.size() == 0
 					? null
 					: followerList.get(followerList.size() - 1).getId();
 			result = getSuccessResult(result, followerList);
 			result = addMapNextStartId(result, lastFollowedId, followerList.size());
-			result = addMapIsLast(result, followerList.size());
+			result = addMapIsLast(result, followerList.size(), requestLimit);
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
@@ -133,8 +139,8 @@ public class FollowController extends BaseController {
 		return result;
 	}
 
-	private Map<String, Object> addMapIsLast(Map<String, Object> result, int listSize) {
-		if (listSize == REQUEST_LIMIT) {
+	private Map<String, Object> addMapIsLast(Map<String, Object> result, int listSize, int requestLimit) {
+		if (listSize == requestLimit) {
 			result.put("isLast", false);
 		} else {
 			result.put("isLast", true);
