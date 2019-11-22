@@ -23,7 +23,7 @@ public class FollowService extends BaseService {
 			followed.FOLLOWER_USER_ID)
 			.from(followed)
 			.where(followed.FOLLOWED_USER_ID.eq(userId)
-				.and(followed.ID.gt(UInteger.valueOf(start))))
+				.and(followed.ID.ge(UInteger.valueOf(start))))
 			.limit(requestLimit)
 			.fetchInto(FollowerResponse.class);
 	}
@@ -34,7 +34,7 @@ public class FollowService extends BaseService {
 			following.FOLLOWED_USER_ID)
 			.from(following)
 			.where(following.FOLLOWER_USER_ID.eq(userId)
-				.and(following.ID.gt(UInteger.valueOf(start))))
+				.and(following.ID.ge(UInteger.valueOf(start))))
 			.limit(requestLimit)
 			.fetchInto(FollowingResponse.class);
 	}

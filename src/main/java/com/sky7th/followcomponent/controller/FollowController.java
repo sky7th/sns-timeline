@@ -49,7 +49,7 @@ public class FollowController extends BaseController {
 			}
 			Integer lastFollowingId = followingList.get(followingList.size() - 1).getId();
 			result = getSuccessResult(result, followingList);
-			result.put("lastId", lastFollowingId);
+			result.put("nextStartId", lastFollowingId + 1);
 
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
@@ -80,7 +80,7 @@ public class FollowController extends BaseController {
 			}
 			Integer lastFollowedId = followerList.get(followerList.size() - 1).getId();
 			result = getSuccessResult(result, followerList);
-			result.put("lastId", lastFollowedId);
+			result.put("nextStartId", lastFollowedId + 1);
 
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
