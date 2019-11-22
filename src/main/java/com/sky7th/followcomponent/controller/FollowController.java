@@ -33,23 +33,24 @@ public class FollowController extends BaseController {
 	 */
 	@GetMapping("/users/{userId}/following")
 	@ResponseBody
-	public Map<String, Object> sendFollowingList(
+	public Map<String, Object> getFollowingMap(
 		@PathVariable(name = "userId") String userId,
 		@RequestParam(name = "start") int start) {
-		HashMap<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		try {
 			List<FollowingResponse> followingList = followService.getFollowingList(userId, start, REQUEST_LIMIT);
+			result = getSuccessResult(result, followingList);
+			result.put("nextStartId", null);
+
+			if (followingList.size() != 0) {
+				Integer lastFollowingId = followingList.get(followingList.size() - 1).getId();
+				result.put("nextStartId", lastFollowingId + 1);
+			}
 			if (followingList.size() != REQUEST_LIMIT) {
 				result.put("isLast", true);
 			} else {
 				result.put("isLast", false);
 			}
-			if (followingList.size() == 0) {
-				return getSuccessResult(result, followingList);
-			}
-			Integer lastFollowingId = followingList.get(followingList.size() - 1).getId();
-			result = getSuccessResult(result, followingList);
-			result.put("nextStartId", lastFollowingId + 1);
 
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
@@ -64,24 +65,24 @@ public class FollowController extends BaseController {
 	 */
 	@GetMapping("/users/{userId}/follower")
 	@ResponseBody
-	public Map<String, Object> sendFollowerList(
+	public Map<String, Object> getFollowerMap(
 		@PathVariable(name = "userId") String userId,
 		@RequestParam(name = "start") int start) {
-		HashMap<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		try {
 			List<FollowerResponse> followerList = followService.getFollowerList(userId, start, REQUEST_LIMIT);
+			result = getSuccessResult(result, followerList);
+			result.put("nextStartId", null);
+
+			if (followerList.size() != 0) {
+				Integer lastFollowedId = followerList.get(followerList.size() - 1).getId();
+				result.put("nextStartId", lastFollowedId + 1);
+			}
 			if (followerList.size() != REQUEST_LIMIT) {
 				result.put("isLast", true);
 			} else {
 				result.put("isLast", false);
 			}
-			if (followerList.size() == 0) {
-				return getSuccessResult(result, followerList);
-			}
-			Integer lastFollowedId = followerList.get(followerList.size() - 1).getId();
-			result = getSuccessResult(result, followerList);
-			result.put("nextStartId", lastFollowedId + 1);
-
 		} catch (Exception e) {
 			result = this.getFailResult(e.getMessage());
 		}
@@ -96,7 +97,7 @@ public class FollowController extends BaseController {
 	 */
 	@PostMapping("/follow")
 	@ResponseBody
-	public Map<String, Object> saveFollow(
+	public Map<String, Object> follow(
 		@RequestParam(name = "fromUserId") String fromUserId,
 		@RequestParam(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
@@ -120,7 +121,7 @@ public class FollowController extends BaseController {
 	 */
 	@DeleteMapping("/follow")
 	@ResponseBody
-	public Map<String, Object> deleteFollow(
+	public Map<String, Object> unFollow(
 		@RequestParam(name = "fromUserId") String fromUserId,
 		@RequestParam(name = "toUserId") String toUserId) {
 		Map<String, Object> result = new HashMap<>();
